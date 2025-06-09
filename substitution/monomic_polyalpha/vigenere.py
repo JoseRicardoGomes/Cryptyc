@@ -33,4 +33,4 @@ def _search_viginere_table(c, key):
     if not (0 <= posKey < 26) or not key.isalpha():
         return c
     # return table position
-    return vigenere_table[posChar][posKey]
+    return vigenere_table[posKey][posChar]
