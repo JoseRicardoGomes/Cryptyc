@@ -15,5 +15,7 @@ def encode(text: str = "") -> str:
     return "".join(result)
 
 def _search_viginere_table(c):
-    pos = ord(c.toLower()) - ord('a')  
+    pos = ord(c.upper()) - ord('A') 
+    if not (0 <= pos < 26) or not c.isalpha():
+        return c
     return vigenere_table[pos][pos]
