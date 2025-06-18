@@ -3,7 +3,7 @@
 '''
 Generate classic RC4 256bit state array.
 '''
-def init_state_array(key: str = "") -> list:
+def key_schedulling(key: str = "") -> list:
     key_bytes = [ord(char) for char in key]
     key_len = len(key_bytes)
 
@@ -20,7 +20,7 @@ def init_state_array(key: str = "") -> list:
 '''
 Generate keystream.
 '''
-def generate_keystream(state: list, len: int) -> list:
+def pseudo_random_gen(state: list, len: int) -> list:
     i = j = 0
     keystream = []
 
@@ -37,17 +37,17 @@ def generate_keystream(state: list, len: int) -> list:
 '''
 RC4 encript message using key.
 '''
-def encrypt(msg: str = "", key: str = "") -> bytes:
-    sarray = init_state_array(key)
-    ks = generate_keystream(sarray, len(msg))
-    encrypted = bytes([ord(char) ^ ks_byte for char, ks_byte in zip(msg, ks)])
+def encrypt(msg: bytes, key: str = "") -> bytes:
+    sarray = key_schedulling(key)
+    ks = pseudo_random_gen(sarray, len(msg))
+    encrypted = bytes([b ^ ks_byte for b, ks_byte in zip(msg, ks)])
     return encrypted
 
 '''
-Decrypt bytes msg using key. Parameter msg should be passed as bytes.fromhex(str) or directly as byte stream.
+Decrypt bytes msg using key. msg must be bytes.
 '''
-def decrypt(msg: str = "", key: str = "") -> str:
-    sarray = init_state_array(key)
-    ks = generate_keystream(sarray, len(msg))
-    decrypted = bytes([byte ^ ks_byte for byte, ks_byte in zip(msg, ks)])
-    return decrypted.decode('latin1')
+def decrypt(msg: bytes = b"", key: str = "") -> bytes:
+    sarray = key_schedulling(key)
+    ks = pseudo_random_gen(sarray, len(msg))
+    decrypted = bytes([b ^ ks_byte for b, ks_byte in zip(msg, ks)])
+    return decrypted
